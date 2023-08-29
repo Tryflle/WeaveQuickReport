@@ -11,13 +11,14 @@ import net.weavemc.loader.api.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
-//sry syz for my terrible codebase and your determination to fix it - weave's local furry
 public class WeaveQuickReport implements ModInitializer {
 
     public static List<String> playerList = new ArrayList<>();
     public static String player = "";
     public static boolean dodgerEnabled, joinedNewServer = false;
-    public static int dodgeDelayTicks = 40;
+    public static long lastDodgeTime = 200;
+    public static final long DODGE_DELAY = 2000;
+
 
     @Override
     public void preInit() {
@@ -29,34 +30,31 @@ public class WeaveQuickReport implements ModInitializer {
         CommandBus.register(new QRCommand());
         CommandBus.register(new QRPLCommand());
     }
-
     @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load event) {
         joinedNewServer = true;
-        dodgeDelayTicks = 40;
     }
 
     @SubscribeEvent
-    public void onPreTick(TickEvent.Pre event) {
-        if (dodgerEnabled && Minecraft.getMinecraft().thePlayer != null) {
-            String playerName = Minecraft.getMinecraft().thePlayer.getName();
-
-            if (playerList.contains(playerName) && dodgeDelayTicks > 0) {
-                dodgeDelayTicks--;
-            }
-
-            if (dodgeDelayTicks == 0 && joinedNewServer) {
+    public void onRenderLivingPost(RenderLivingEvent.Post event) {
+        if (dodgerEnabled && event.getEntity() != null) {
+            String entityName = event.getEntity().getName();
+            if (playerList.contains(entityName) && shouldDodge() && joinedNewServer) {
                 Minecraft.getMinecraft().thePlayer.sendChatMessage("/lobby");
                 Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(EnumChatFormatting.AQUA + "[AutoDodge] Attempting to evade your problems."));
-                dodgeDelayTicks = 60;
+                lastDodgeTime = System.currentTimeMillis();
                 joinedNewServer = false;
+
             }
         }
     }
 
+    private boolean shouldDodge() {
+        return System.currentTimeMillis() - lastDodgeTime >= DODGE_DELAY;
+    }
+
     private void handlePlayerListAdd(PlayerListEvent.Add event) {
         String joinedPlayerName = event.getPlayerData().getProfile().getName();
-
         for (String storedPlayer : playerList) {
             if (storedPlayer.equals(joinedPlayerName)) {
                 Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "[WQR] Reported player " + joinedPlayerName + " detected in your server."));
@@ -64,5 +62,4 @@ public class WeaveQuickReport implements ModInitializer {
             }
         }
     }
-
 }
