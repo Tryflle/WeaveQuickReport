@@ -8,7 +8,7 @@ Speed up reports on Hypixel with Weave! Inspired by QuickReport (https://github.
 - `/qrclear` | Clears list of reported players.
 - `/qrpl` | Adds a player to the list of reported players without actually reporting them.
 - `/qrdebug` | For me trying to figure out why my terrible code does not work.
-- `/autododge` | Experimental autododge. Will be fixed in the next update.
+- `/autododge` | Experimental autododge. Works on Hypixel now!
 
 ## Installation
 1. Download [Lunar Client QT](https://github.com/Tryflle/WeaveBatchDownload).
