@@ -18,6 +18,8 @@ public class WeaveQuickReport implements ModInitializer {
     public static boolean dodgerEnabled, joinedNewServer = false;
     public static long lastDodgeTime = 200;
     public static final long DODGE_DELAY = 2000;
+    private boolean initialDelay = false;
+    private long initialTime = System.currentTimeMillis();
 
 
     @Override
@@ -30,27 +32,35 @@ public class WeaveQuickReport implements ModInitializer {
         CommandBus.register(new QRCommand());
         CommandBus.register(new QRPLCommand());
     }
+
     @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load event) {
         joinedNewServer = true;
+        initialDelay = false;
+        initialTime = System.currentTimeMillis();
     }
 
     @SubscribeEvent
     public void onRenderLivingPost(RenderLivingEvent.Post event) {
         if (dodgerEnabled && event.getEntity() != null) {
             String entityName = event.getEntity().getName();
-            if (playerList.contains(entityName) && shouldDodge() && joinedNewServer) {
+            if (playerList.contains(entityName) && shouldDodge() && joinedNewServer && initDelay()) {
                 Minecraft.getMinecraft().thePlayer.sendChatMessage("/lobby");
                 Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(EnumChatFormatting.AQUA + "[AutoDodge] Attempting to evade your problems."));
                 lastDodgeTime = System.currentTimeMillis();
                 joinedNewServer = false;
-
             }
         }
     }
 
     private boolean shouldDodge() {
         return System.currentTimeMillis() - lastDodgeTime >= DODGE_DELAY;
+    }
+
+    private boolean initDelay() {
+        long currentTime = System.currentTimeMillis();
+        long initialDelay = 2000;
+        return currentTime - initialTime >= initialDelay;
     }
 
     private void handlePlayerListAdd(PlayerListEvent.Add event) {
