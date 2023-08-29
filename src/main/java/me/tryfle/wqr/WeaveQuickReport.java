@@ -10,6 +10,11 @@ import net.weavemc.loader.api.event.*;
 
 import java.util.ArrayList;
 import java.util.List;
+//TODO:
+//fix dupe player notification
+//make sure a player cannot report themselves
+//remove debug command
+//maybe tweak the command response to look more ✨aesthetically pleasing✨
 
 public class WeaveQuickReport implements ModInitializer {
 
