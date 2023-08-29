@@ -12,7 +12,7 @@ Speed up reports on Hypixel with Weave! Inspired by QuickReport (https://github.
 
 ## Installation
 1. Download [Lunar Client QT](https://github.com/Tryflle/WeaveBatchDownload).
-2. Download the [Mod](https://github.com/Tryflle/WeaveQuickReport/releases) mod.
+2. Download the [Mod](https://github.com/Tryflle/WeaveQuickReport/releases).
 3. Place the jar in your Weave mods folder.
     1. Windows: `%userprofile%\.weave\mods`
     2. Unix: `~/.weave/mods`
