@@ -22,6 +22,7 @@ public class WeaveQuickReport implements ModInitializer {
     @Override
     public void preInit() {
         EventBus.subscribe(this);
+        EventBus.subscribe(PlayerListEvent.Add.class, this::handlePlayerListAdd);
         CommandBus.register(new AutododgeCommand());
         CommandBus.register(new DebugCommand());
         CommandBus.register(new QRClearCommand());
@@ -53,7 +54,6 @@ public class WeaveQuickReport implements ModInitializer {
         }
     }
 
-    @SubscribeEvent
     private void handlePlayerListAdd(PlayerListEvent.Add event) {
         String joinedPlayerName = event.getPlayerData().getProfile().getName();
 
